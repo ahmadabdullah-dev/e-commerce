@@ -80,4 +80,9 @@ public class AuthService : IAuthService
         }
         return Result<string>.Success("Registered successfully.");
     }
+    public async Task<Result<string>> LogoutAsync()
+    {
+        await _signInManager.SignOutAsync();
+        return Result<string>.Success("Logged out successfully");
+    }
 }
