@@ -13,3 +13,9 @@ public class RegisterDto
     public required string Email { get; set; }
     public required string Password { get; set; }
 }
+public class ResetPasswordDto
+{
+    public required string Email { get; set; }
+    public required string Code { get; set; }
+    public required string NewPassword { get; set; }
+}
