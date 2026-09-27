@@ -33,4 +33,12 @@ public class AuthController : BaseApiController
 
         return HandleResult(result);
     }
+    [Authorize]
+    [HttpPatch("confirm-email")]
+    public async Task<IActionResult> ConfirmEmail(string code)
+    {
+        var result = await _authService.ConfirmEmailAsync(code);
+
+        return HandleResult(result);
+    }
 }
