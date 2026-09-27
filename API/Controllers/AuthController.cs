@@ -17,5 +17,11 @@ public class AuthController : BaseApiController
 
         return HandleResult(result);
     }
-  
+    [HttpPost("register")]
+    public async Task<IActionResult> Register(RegisterDto dto)
+    {
+        var result = await _authService.RegisterAsync(dto);
+
+        return HandleResult(result);
+    }
 }
