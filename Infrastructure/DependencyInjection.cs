@@ -13,7 +13,7 @@ namespace Infrastructure
             services.AddDbContext<ApplicationDbContext>(opt =>
             {
                 opt.UseNpgsql(configuration.GetConnectionString("DefaultConnection"))
-                .LogTo(Console.WriteLine, LogLevel.Information).EnableSensitiveDataLogging(); 
+                .LogTo(Console.WriteLine, LogLevel.Information).EnableSensitiveDataLogging();
             });
 
             services.AddIdentity<AppUser, IdentityRole>(options =>
@@ -33,9 +33,16 @@ namespace Infrastructure
             .AddEntityFrameworkStores<ApplicationDbContext>()
             .AddDefaultTokenProviders();
 
+            services.AddScoped<DataSeeder>();
             services.AddDataProtection();
 
             return services;
+        } 
+        public static async Task SeedDataAsync(this IServiceProvider serviceProvider)
+        {
+            using var scope = serviceProvider.CreateScope();
+            var seeder = scope.ServiceProvider.GetRequiredService<DataSeeder>();
+            await seeder.Seed();
         }
-    }
-}
+    }     
+} 
