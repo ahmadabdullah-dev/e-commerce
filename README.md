@@ -1,5 +1,25 @@
 # E Commerce
 
+## Tech Stack
+- **WEB:** React, TypeScript, TanStack Query, Axios, MUI, React Router
+- **API:** ASP.NET Web API, C#
+- **Auth:** ASP.NET Identity, Cookie-based Authentication, Role-based Authorization
+- **ORM:** Entity Framework, Code First, BaseEntity
+
+## Features 
+- EmailService
+- DataSeeder
+- RateLimiter
+- Cors
+- AuthService (Login, Logout, Register, ConfirmEmail, ResendEmailConfirmationCode, ForgetPassword, UpdatePassword )
+
+## Architechure(Layered On API)
+- **WEB:** UI Components, Hooks, Routes, Call APIs
+- **API:** Controllers, BaseApiController, CORS, UserSecrets, RateLimiter, GlobalUsings, AppCookie Configuration, Policies, DI per layer
+- **Application:** Services, Interfaces, Dtos, Result<T> Pattern, Global Usings, IOptions for Configurations, DI per layer, GlobalUsings
+- **Infrastructure:** Repositories, Interfaces, BaseRepository, PagedList, DataSeeder, AppDbContext, DI per layer, GlobalUsings
+- **Domain:** BaseEntity, Entities, GlobalUsings
+
 ## Run Database Migrations
 
 Run these commands from the **solution root**.
