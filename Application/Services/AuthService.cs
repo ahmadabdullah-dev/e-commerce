@@ -146,4 +146,22 @@ public class AuthService : IAuthService
         return Result<string>.Success("Email Confirmation code has been resent successfully");
 
     }
+    public async Task<Result<string>> ForgetPasswordAsync(string email)
+    {
+        var user = await _userManager.FindByEmailAsync(email);
+
+        if (user == null)
+            return Result<string>.Failure("User not found", 404);
+        try
+        {
+            await _emailService.SendCodeAsync(user, "Reset Password", EmailPurposes.PASSWORD_RESET);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex.Message);
+            return Result<string>.Failure("Unexpected error happened while sending Password reset code", 400);
+        }
+
+        return Result<string>.Success("Reset code sent successfully.");
+    }
 }

@@ -48,4 +48,10 @@ public class AuthController : BaseApiController
         var result = await _authService.ResendEmailConfirmationCodeAsync();
         return HandleResult(result);
     }
+    [HttpPost("forget-password")]
+    public async Task<IActionResult> ForgetPassword(string email)
+    {
+        var result = await _authService.ForgetPasswordAsync(email);
+        return HandleResult(result);
+    }
 }
