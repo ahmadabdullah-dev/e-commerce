@@ -118,4 +118,32 @@ public class AuthService : IAuthService
 
         return Result<string>.Success("Email confirmed successfully.");
     }
+    public async Task<Result<string>> ResendEmailConfirmationCodeAsync()
+    {
+        var userId = _userService.GetCurrentUserId();
+
+        if (userId == null)
+            return Result<string>.Failure("Unauthorized", 401);
+
+        var user = await _userManager.FindByIdAsync(userId);
+
+        if (user == null)
+            return Result<string>.Failure("Current user not found in db", 404);
+
+        if (await _userManager.IsEmailConfirmedAsync(user))
+            return Result<string>.Failure("Email already confirmed", 400);
+
+        try
+        {
+            await _emailService.SendCodeAsync(user, "Email Confirmation", EmailPurposes.EMAIL_CONFIRMATION);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex.Message);
+            return Result<string>.Failure("Unexpected error happened while resending email confirmation code", 400);
+        }
+
+        return Result<string>.Success("Email Confirmation code has been resent successfully");
+
+    }
 }
