@@ -18,6 +18,8 @@ await app.Services.SeedDataAsync();
 
 app.UseHttpsRedirection();
 
+app.UseCors("AllowWeb");
+
 app.UseAuthorization();
 
 app.MapControllers();

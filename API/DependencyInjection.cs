@@ -13,6 +13,18 @@ public static class DependencyInjection
             options.SlidingExpiration = true;
         });
 
+        services.AddCors(options =>
+        {
+            options.AddPolicy("AllowWeb",
+                policy =>
+                {
+                    policy.WithOrigins("https://localhost:3000")
+                          .AllowAnyHeader()
+                          .AllowAnyMethod()
+                          .AllowCredentials();
+                });
+        });
+
         return services;
     }
 }
