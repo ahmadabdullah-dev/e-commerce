@@ -12,12 +12,16 @@
   "dependencies": {
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.1",
+    "@mui/icons-material": "^9.4.0",
     "@mui/material": "^9.4.0",
+    "@tanstack/react-query": "^5.104.0",
     "axios": "^1.20.0",
     "install": "^0.13.0",
     "npm": "^11.20.0",
     "react": "^19.2.8",
     "react-dom": "^19.2.8",
+    "react-hook-form": "^7.89.0",
+    "react-router": "^8.4.0",
     "rollup-plugin-visualizer": "^7.1.1",
     "vite-plugin-mkcert": "^2.1.0"
   },
