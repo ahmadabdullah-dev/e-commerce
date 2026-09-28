@@ -22,6 +22,8 @@ app.UseHttpsRedirection();
 
 app.UseCors("AllowWeb");
 
+app.UseAuthentication();
+
 app.UseAuthorization();
 
 app.MapControllers();

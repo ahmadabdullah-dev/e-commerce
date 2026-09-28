@@ -11,8 +11,8 @@ public class ApplicationDbContext(DbContextOptions options) : IdentityDbContext<
       
         builder.Entity<AppUser>(entity =>
         {
-            entity.Property(u => u.FirstName).IsRequired();
-            entity.Property(u => u.LastName).IsRequired();
+            entity.Property(u => u.FirstName).HasMaxLength(30).IsRequired();
+            entity.Property(u => u.LastName).HasMaxLength(30).IsRequired();
         });
     }
 }
