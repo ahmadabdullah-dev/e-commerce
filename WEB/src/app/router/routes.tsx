@@ -7,6 +7,7 @@ import LoginForm from "../../features/auth/LoginForm";
 import RegisterForm from "../../features/auth/RegisterForm";
 import ForgetPasswordForm from "../../features/auth/ForgetPassword";
 import ResetPasswordForm from "../../features/auth/ResetPasswordForm";
+import RequireAuth from "./RequireAuth";
 
 export const routes = createBrowserRouter([
   {
@@ -15,6 +16,12 @@ export const routes = createBrowserRouter([
     errorElement: <ErrorPage />,
     children: [
       { index: true, element: <LandingPage /> },
+      {
+        element: <RequireAuth />,
+        children: [
+          { path: "/test-auth", element: "hi" },
+        ],
+      },
       { path: "register", element: <RegisterForm /> },
       { path: "login", element: <LoginForm /> },
       { path: "forget-password", element: <ForgetPasswordForm /> },
