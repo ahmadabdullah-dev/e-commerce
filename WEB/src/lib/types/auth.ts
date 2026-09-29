@@ -9,3 +9,8 @@ export type RegisterDto = {
   Email: string;
   Password: string;
 };
+export type ResetPasswordDto = {
+  email: string;
+  code: string;
+  newPassword: string;
+};

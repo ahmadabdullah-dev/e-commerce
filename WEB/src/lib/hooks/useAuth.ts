@@ -1,6 +1,6 @@
 import { useMutation } from "@tanstack/react-query";
 import agent from "../api/agent";
-import type { LoginDto, RegisterDto } from "../types/auth";
+import type { LoginDto, RegisterDto, ResetPasswordDto } from "../types/auth";
 
 export function useLoginUser() {
   return useMutation({
@@ -18,3 +18,22 @@ export function useRegisterUser() {
     },
   });
 }
+export const useForgetPasswordAsync = () => {
+  return useMutation({
+    mutationFn: async (email: string) => {
+      const response = await agent.post("/auth/forget-password", null, {
+        params: { email },
+      });
+      return response.data;
+    },
+  });
+};
+
+export const useResetPasswordAsync = () => {
+  return useMutation({
+    mutationFn: async (creds: ResetPasswordDto) => {
+      const response = await agent.post("/auth/reset-password", creds);
+      return response.data;
+    },
+  });
+};
