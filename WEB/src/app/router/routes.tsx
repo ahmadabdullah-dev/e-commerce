@@ -9,6 +9,8 @@ import ForgetPasswordForm from "../../features/auth/ForgetPassword";
 import ResetPasswordForm from "../../features/auth/ResetPasswordForm";
 import RequireAuth from "./RequireAuth";
 import ConfirmEmailForm from "../../features/auth/ConfirmEmailForm";
+import RequireConfirmedEmail from "./RequireConfirmedEmail";
+import Dashboard from "../Dashboard";
 
 export const routes = createBrowserRouter([
   {
@@ -19,7 +21,15 @@ export const routes = createBrowserRouter([
       { index: true, element: <LandingPage /> },
       {
         element: <RequireAuth />,
-        children: [{ path: "/confirm-email", element: <ConfirmEmailForm /> }],
+        children: [
+          {
+            element: <RequireConfirmedEmail />,
+            children: [
+              { path: "dashboard", element: <Dashboard /> },
+            ],
+          },
+          { path: "/confirm-email", element: <ConfirmEmailForm /> },
+        ],
       },
       { path: "register", element: <RegisterForm /> },
       { path: "login", element: <LoginForm /> },
