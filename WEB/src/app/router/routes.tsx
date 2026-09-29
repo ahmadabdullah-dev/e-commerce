@@ -11,6 +11,7 @@ import RequireAuth from "./RequireAuth";
 import ConfirmEmailForm from "../../features/auth/ConfirmEmailForm";
 import RequireConfirmedEmail from "./RequireConfirmedEmail";
 import Dashboard from "../Dashboard";
+import MyProfile from "../../features/user/MyProfile";
 
 export const routes = createBrowserRouter([
   {
@@ -26,6 +27,7 @@ export const routes = createBrowserRouter([
             element: <RequireConfirmedEmail />,
             children: [
               { path: "dashboard", element: <Dashboard /> },
+              { path: "my-profile", element: <MyProfile /> },
             ],
           },
           { path: "/confirm-email", element: <ConfirmEmailForm /> },

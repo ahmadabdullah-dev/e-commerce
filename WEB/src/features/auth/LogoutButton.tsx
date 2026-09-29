@@ -11,8 +11,9 @@ export default function LogoutButton() {
       disabled={logoutAsync.isPending}
       variant="outlined"
       startIcon={<LogoutIcon />}
+      sx={{px:0}}
     >
-      {logoutAsync.isPending ? "Logging out…" : "Log out"}
+      {logoutAsync.isPending ? "..." : ""}
     </Button>
   );
 }
