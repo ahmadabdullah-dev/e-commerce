@@ -1,6 +1,7 @@
 import { Box } from "@mui/material";
 import { Outlet } from "react-router";
 import Header from "./components/Header";
+import Footer from "./components/Footer";
 
 export default function App() {
   return (
@@ -10,6 +11,7 @@ export default function App() {
       <Box component="main" sx={{ flex: 1 }}>
         <Outlet />
       </Box>
+      <Footer/>
     </Box>
   );
 }
