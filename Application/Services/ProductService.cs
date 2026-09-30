@@ -1,0 +1,68 @@
+﻿using Microsoft.Extensions.Logging;
+
+namespace Application.Services;
+
+public class ProductService : IProductService
+{
+    private readonly IProductRepository _productRepository;
+    private readonly IFileService _fileService;
+    private readonly ILogger<ProductService> _logger;
+    public ProductService(
+        IProductRepository productRepository,
+        IFileService fileService,
+        ILogger<ProductService> logger)
+    {
+        _productRepository = productRepository;
+        _fileService = fileService;
+        _logger = logger;
+
+    }
+
+    public async Task<Result<string>> AddProductAsync(AddProductDto dto, CancellationToken ct)
+    {
+        string? imageUrl = null;
+        string? imagePublicId = null;
+
+        if (dto.Image is not null)
+        {
+            var imageResult = await _fileService.UploadImage(dto.Image);
+        
+            if (!imageResult.IsSuccess)
+               return Result<string>.Failure(imageResult.Error!,400);
+           
+            imageUrl = imageResult.Value!.Url;
+            imagePublicId = imageResult.Value.PublicId;
+        }
+
+        var product = new Product
+        {
+            Name = dto.Name,
+            Description = dto.Description,
+            Price = dto.Price,
+            ImageUrl = imageUrl,
+            ImagePublicId = imagePublicId,
+
+        };
+        try
+        {
+            await _productRepository.AddAsync(product, ct);
+            await _productRepository.SaveChangesAsync(ct);
+
+        }
+        catch(Exception ex)
+        {
+            _logger.LogError(ex, $"Failed to save product {dto.Name}");
+           
+            if(imagePublicId is not null)
+            {
+                var cleanup = await _fileService.DeleteFile(imagePublicId);
+                if (!cleanup.IsSuccess)
+                    _logger.LogWarning($"Orphaned Cloudinary image {imagePublicId}");
+            }
+
+            throw;
+        }
+        return Result<string>.Success("Product added successfully");
+
+    }
+}

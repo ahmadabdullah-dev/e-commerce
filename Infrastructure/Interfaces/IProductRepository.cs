@@ -1,5 +1,5 @@
 ﻿namespace Infrastructure.Interfaces;
 
-public interface IProductRepository
+public interface IProductRepository : IRepository<Product>
 {
 }
