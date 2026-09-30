@@ -34,6 +34,7 @@ namespace Infrastructure
             .AddDefaultTokenProviders();
 
             services.AddScoped<DataSeeder>();
+            services.AddScoped<IProductRepository, ProductRepository>();
             services.AddDataProtection();
 
             return services;
