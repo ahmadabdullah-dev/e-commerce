@@ -65,7 +65,6 @@ public class ProductService : IProductService
         return Result<string>.Success("Product added successfully");
 
     }
-
     public async Task<Result<PagedList<ProductDto>>> GetAllProductsAsync(PaginationParams p, CancellationToken ct)
     {
         var products = await _productRepository.GetAllAsync(p, ct);
@@ -76,7 +75,6 @@ public class ProductService : IProductService
             {
                 Id = x.Id,
                 Name = x.Name,
-                Description = x.Description,
                 Price = x.Price,
                 ImageUrl = x.ImageUrl,
                 IsActive = x.IsActive
@@ -89,5 +87,24 @@ public class ProductService : IProductService
 
         };
         return Result<PagedList<ProductDto>>.Success(dtos);
+    }
+
+    public async Task<Result<ProductDto>> GetProductByIdAsync(string id, CancellationToken ct)
+    {
+        var product = await _productRepository.GetByIdAsync(id, ct);
+       
+        if (product is null)
+            return Result<ProductDto>.Failure("Product not found", 404);
+      
+        var dto = new ProductDto
+        {
+            Id = product.Id,
+            Name = product.Name,
+            Description = product.Description,
+            Price = product.Price,
+            ImageUrl = product.ImageUrl,
+            IsActive = product.IsActive
+        };
+        return Result<ProductDto>.Success(dto);
     }
 }
