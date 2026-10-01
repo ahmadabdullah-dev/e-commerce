@@ -88,7 +88,6 @@ public class ProductService : IProductService
         };
         return Result<PagedList<ProductDto>>.Success(dtos);
     }
-
     public async Task<Result<ProductDto>> GetProductByIdAsync(string id, CancellationToken ct)
     {
         var product = await _productRepository.GetByIdAsync(id, ct);
@@ -106,5 +105,53 @@ public class ProductService : IProductService
             IsActive = product.IsActive
         };
         return Result<ProductDto>.Success(dto);
+    }
+    public async Task<Result<string>> UpdateProductAsync(UpdateProductDto dto, CancellationToken ct)
+    {
+        var product = await _productRepository.GetByIdAsync(dto.Id, ct);
+        
+        if (product is null)
+            return Result<string>.Failure("Product not found", 404);
+       
+        if (!string.IsNullOrEmpty(dto.Name))
+            product.Name = dto.Name;
+       
+        if (!string.IsNullOrEmpty(dto.Description))
+            product.Description = dto.Description;
+       
+        if (dto.Price.HasValue)
+            product.Price = dto.Price.Value;
+       
+        product.IsActive = dto.IsActive;
+       
+        if (dto.Image is not null)
+        {
+            // Delete the old image if it exists
+            if (!string.IsNullOrEmpty(product.ImagePublicId))
+            {
+                var deleteResult = await _fileService.DeleteFile(product.ImagePublicId);
+                if (!deleteResult.IsSuccess)
+                    _logger.LogWarning($"Failed to delete old image {product.ImagePublicId}");
+            }
+
+            // Upload the new image
+            var uploadResult = await _fileService.UploadImage(dto.Image);
+            if (!uploadResult.IsSuccess)
+                return Result<string>.Failure(uploadResult.Error!, 400);
+          
+            product.ImageUrl = uploadResult.Value!.Url;
+            product.ImagePublicId = uploadResult.Value.PublicId;
+        }
+        try
+        {
+            _productRepository.Update(product);
+            await _productRepository.SaveChangesAsync(ct);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, $"Failed to update product {dto.Id}");
+            throw;
+        }
+        return Result<string>.Success("Product updated successfully");
     }
 }

@@ -30,4 +30,12 @@ public class ProductController : BaseApiController
         var result = await _productService.GetProductByIdAsync(id, ct);
         return HandleResult(result);
     }
+    [HttpPut("update")]
+    [Authorize(Roles = "Admin")]
+    [RequestSizeLimit(6 * 1024 * 1024)] // 6mb  
+    public async Task<IActionResult> UpdateProduct([FromForm] UpdateProductDto dto, CancellationToken ct)
+    {
+        var result = await _productService.UpdateProductAsync(dto, ct);
+        return HandleResult(result);
+    }
 }
