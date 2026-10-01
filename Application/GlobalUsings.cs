@@ -7,3 +7,5 @@ global using Application.Services;
 global using Application.Common.Configurations;
 global using Domain;
 global using Infrastructure.Interfaces;
+global using Infrastructure.Common;
+ 

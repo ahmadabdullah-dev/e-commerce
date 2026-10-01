@@ -65,4 +65,29 @@ public class ProductService : IProductService
         return Result<string>.Success("Product added successfully");
 
     }
+
+    public async Task<Result<PagedList<ProductDto>>> GetAllProductsAsync(PaginationParams p, CancellationToken ct)
+    {
+        var products = await _productRepository.GetAllAsync(p, ct);
+
+        var dtos = new PagedList<ProductDto>
+        {
+            Items = products.Items.Select(x => new ProductDto 
+            {
+                Id = x.Id,
+                Name = x.Name,
+                Description = x.Description,
+                Price = x.Price,
+                ImageUrl = x.ImageUrl,
+                IsActive = x.IsActive
+
+            }).ToList(),
+
+            CurrentPage = products.CurrentPage,
+            TotalCount = products.TotalCount,
+            TotalPages = products.TotalPages
+
+        };
+        return Result<PagedList<ProductDto>>.Success(dtos);
+    }
 }

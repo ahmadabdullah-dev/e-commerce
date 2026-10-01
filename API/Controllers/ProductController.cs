@@ -18,4 +18,10 @@ public class ProductController : BaseApiController
         var result = await _productService.AddProductAsync(dto, ct);
         return HandleResult(result);
     }
+    [HttpGet("all")]
+    public async Task<IActionResult> GetAllProducts([FromQuery] PaginationParams p, CancellationToken ct)
+    {
+        var result = await _productService.GetAllProductsAsync(p, ct);
+        return HandleResult(result);
+    }
 }
