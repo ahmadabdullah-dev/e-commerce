@@ -12,3 +12,12 @@ export type ProductDto = {
   imageUrl: string | null;
   isActive: boolean
 }
+
+export type UpdateProductDto = {
+  id: string;
+  name: string;
+  description: string | null;
+  price: string | null;
+  image: File | null;
+  isActive: boolean;
+};
