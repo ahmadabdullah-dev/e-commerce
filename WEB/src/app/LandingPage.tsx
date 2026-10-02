@@ -1,5 +1,9 @@
+import ProductsList from "../features/product/ProductsList";
+
 export default function LandingPage() {
   return (
-    <div>LandingPage</div>
+    <div>
+      <ProductsList/>
+    </div>
   )
 }

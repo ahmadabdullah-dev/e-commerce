@@ -1,6 +1,7 @@
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import agent from "../api/agent";
-import type { AddProductDto } from "../types/product";
+import type { AddProductDto, ProductDto } from "../types/product";
+import type { PaginatedList, PaginationParams } from "../types/common";
 
 export const useAddProduct = () => {
   return useMutation({
@@ -12,3 +13,16 @@ export const useAddProduct = () => {
     },
   });
 };
+export function useGetAllProducts(pagination: PaginationParams) {
+  return useQuery({
+    queryKey: ["products", pagination],
+    queryFn: async () => {
+      const response = await agent.get<PaginatedList<ProductDto>>(
+        "Product/all",
+        { params: pagination },
+      );
+      return response.data;
+    },
+    retry: false,
+  });
+}
