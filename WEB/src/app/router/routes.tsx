@@ -14,6 +14,8 @@ import Dashboard from "../Dashboard";
 import MyProfile from "../../features/user/MyProfile";
 import Product from "../../features/product/ProductDetails";
 import UpdateProduct from "../../features/product/UpdateProduct";
+import RequireAdminRole from "./RequireAdminRole";
+import AddProductForm from "../../features/product/AddProductForm";
 
 export const routes = createBrowserRouter([
   {
@@ -28,7 +30,13 @@ export const routes = createBrowserRouter([
           {
             element: <RequireConfirmedEmail />,
             children: [
-              { path: "product/update/:id", element: <UpdateProduct /> },
+              {
+                element: <RequireAdminRole />,
+                children: [
+                  { path: "product/update/:id", element: <UpdateProduct /> },
+                  { path: "product/add", element: <AddProductForm /> },
+                ],
+              },
               { path: "dashboard", element: <Dashboard /> },
               { path: "my-profile", element: <MyProfile /> },
             ],
