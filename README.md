@@ -11,7 +11,8 @@
 - DataSeeder
 - RateLimiter
 - Cors
-- AuthService (Login, Logout, Register, ConfirmEmail, ResendEmailConfirmationCode, ForgetPassword, UpdatePassword )
+- AuthService (Login, Logout, Register, ConfirmEmail, ResendEmailConfirmationCode, ForgetPassword, UpdatePassword)
+- FileService (UploadImage, UploadRawFile, DeleteFile)
 
 ## Architechure(Layered On API)
 - **WEB:** UI Components, Hooks, Routes, Call APIs
