@@ -11,11 +11,13 @@ import {
   Typography,
 } from "@mui/material";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import { useCurrentUser } from "../../lib/hooks/useUser";
 
 export default function ProductDetails() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const { data: product, isLoading, error } = useGetProductById(id ?? "");
+  const {data: currentUser} = useCurrentUser();
 
   if (!id) {
     return (
@@ -57,16 +59,25 @@ export default function ProductDetails() {
 
   return (
     <Container maxWidth="lg" sx={{ py: { xs: 4, md: 8 } }}>
-    <Button
-      onClick={() => navigate("/")}
-      variant="text"
-      startIcon={<ArrowBackIcon />}
-      sx={{ mb: 4, px: 0, color: "text.secondary" }}
-    >
-      Go to products
-    </Button>
-     
+      <Button
+        onClick={() => navigate("/")}
+        variant="text"
+        startIcon={<ArrowBackIcon />}
+        sx={{ mb: 4, px: 0, color: "text.secondary" }}
+      >
+        Go to products
+      </Button>
 
+      {currentUser?.role === "Admin" && (
+        <Box sx={{ paddingBottom: 3 }}>
+          <Button
+            variant="outlined"
+            onClick={() => navigate(`/product/update/${product.id}`)}
+          >
+            Update Product
+          </Button>
+        </Box>
+      )}
       <Grid container spacing={{ xs: 4, md: 8 }}>
         <Grid size={{ xs: 12, md: 6 }}>
           <Box
