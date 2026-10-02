@@ -12,6 +12,7 @@ import ConfirmEmailForm from "../../features/auth/ConfirmEmailForm";
 import RequireConfirmedEmail from "./RequireConfirmedEmail";
 import Dashboard from "../Dashboard";
 import MyProfile from "../../features/user/MyProfile";
+import Product from "../../features/product/ProductDetails";
 
 export const routes = createBrowserRouter([
   {
@@ -37,6 +38,8 @@ export const routes = createBrowserRouter([
       { path: "login", element: <LoginForm /> },
       { path: "forget-password", element: <ForgetPasswordForm /> },
       { path: "reset-password/:email", element: <ResetPasswordForm /> },
+      { path: "product/:id", element: <Product /> },
+
       { path: "*", element: <NotFound /> },
     ],
   },

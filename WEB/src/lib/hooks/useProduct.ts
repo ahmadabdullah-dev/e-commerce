@@ -26,3 +26,16 @@ export function useGetAllProducts(pagination: PaginationParams) {
     retry: false,
   });
 }
+
+export function useGetProductById(id: string) {
+  return useQuery({
+    queryKey: ["products", id],
+    queryFn: async () =>
+      agent
+        .get<ProductDto>(`/Product/${encodeURIComponent(id)}`)
+        .then((res) => res.data),
+    staleTime: 5 * 60 * 1000,
+    enabled: !!id,
+    retry: false,
+  });
+}
