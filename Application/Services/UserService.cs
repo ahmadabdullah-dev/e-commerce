@@ -189,5 +189,30 @@ public class UserService : IUserService
 
         return Result<string>.Success("Confirmation code resent to new email");
     }
+    public async Task<Result<string>> UpdateCurrentUserNameAsync(string newUserName)
+    {
+        var currentUserId = GetCurrentUserId();
+
+        if (currentUserId == null)
+            return Result<string>.Failure("Unauthorized", 401);
+
+        var currentUser = await _userManager.FindByIdAsync(currentUserId);
+
+        if (currentUser == null)
+            return Result<string>.Failure("User not found", 404);
+
+        if (string.Equals(currentUser.UserName, newUserName, StringComparison.OrdinalIgnoreCase))
+            return Result<string>.Failure("You cannot use the same UserName", 409);
+
+        currentUser.UserName = newUserName;
+
+        var updateResult = await _userManager.UpdateAsync(currentUser);
+
+        if (!updateResult.Succeeded)
+            return Result<string>.Failure(ServiceHelper.GetFirstError(updateResult), 400);
+
+        return Result<string>.Success("UserName updated successfully");
+
+    }
 
 }

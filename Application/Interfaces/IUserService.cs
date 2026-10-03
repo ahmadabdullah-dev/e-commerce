@@ -8,4 +8,6 @@ public interface IUserService
     Task<Result<string>> RequestUpdateCurrentEmailAsync(string newEmail);
     Task<Result<string>> UpdateCurrentEmailAsync(string code);
     Task<Result<string>> ResendUpdateCurrentEmailConfirmationCodeAsync();
+    Task<Result<string>> UpdateCurrentUserNameAsync(string userName);
+
 }
