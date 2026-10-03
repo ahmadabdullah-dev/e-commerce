@@ -2,8 +2,10 @@
 
 public class OrderService : IOrderService
 {
-    public OrderService()
+    private readonly IOrderRepository _orderRepository;
+
+    public OrderService(IOrderRepository orderRepository)
     {
-        
+        _orderRepository = orderRepository;
     }
 }

@@ -35,6 +35,9 @@ namespace Infrastructure
 
             services.AddScoped<DataSeeder>();
             services.AddScoped<IProductRepository, ProductRepository>();
+            services.AddScoped<IOrderRepository, OrderRepository>();
+            services.AddScoped<IBasketRepository, BasketRepository>();  
+
             services.AddDataProtection();
 
             return services;
