@@ -9,3 +9,8 @@ public class UserDto
     public bool IsEmailConfirmed { get; set; } 
     public string Role { get; set; } = null!;
 }
+public class UpdateUserDto
+{
+    public string? FirstName { get; set; } 
+    public string? LastName { get; set; } 
+}
