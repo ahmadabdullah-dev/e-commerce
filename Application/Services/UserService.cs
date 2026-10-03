@@ -10,11 +10,14 @@ public class UserService : IUserService
     private readonly IHttpContextAccessor _httpContextAccessor;
     private readonly IEmailService _emailService;
     private readonly ILogger<UserService> _logger;
+
+    private readonly SignInManager<AppUser> _signInManager;
     public UserService(
         UserManager<AppUser> userManager,
         IHttpContextAccessor httpContextAccessor,
         IEmailService emailService,
-        ILogger<UserService> logger
+        ILogger<UserService> logger,
+        SignInManager<AppUser> signInManager
 
     )
     {
@@ -22,6 +25,7 @@ public class UserService : IUserService
         _httpContextAccessor = httpContextAccessor;
         _emailService = emailService;
         _logger = logger;
+        _signInManager = signInManager; 
     }
     public string? GetCurrentUserId()
     {
@@ -214,5 +218,27 @@ public class UserService : IUserService
         return Result<string>.Success("UserName updated successfully");
 
     }
+    public async Task<Result<string>> DeleteCurrentUserAsync()
+    {
+        var currentUserId = GetCurrentUserId();
 
+        if (currentUserId == null)
+            return Result<string>.Failure("Unauthorized", 401);
+
+        var currentUser = await _userManager.FindByIdAsync(currentUserId);
+
+        if (currentUser == null)
+            return Result<string>.Failure("User not found", 404);
+
+        var deleteResult = await _userManager.DeleteAsync(currentUser);
+
+        if (deleteResult.Succeeded)
+        {
+            await _signInManager.SignOutAsync();
+            return Result<string>.Success("User deleted successfully");
+
+        }
+        return Result<string>.Failure(ServiceHelper.GetFirstError(deleteResult), 400);
+
+    }
 }

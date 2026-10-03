@@ -47,4 +47,10 @@ public class UserController : BaseApiController
         var result = await _userService.UpdateCurrentUserNameAsync(newUserName);
         return HandleResult(result);
     }
+    [HttpDelete("delete-current-user")]
+    public async Task<IActionResult> DeleteCurrentUser()
+    {
+        var result = await _userService.DeleteCurrentUserAsync();
+        return HandleResult(result);
+    }
 }
