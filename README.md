@@ -9,10 +9,14 @@
 ## Features 
 - EmailService
 - DataSeeder
-- RateLimiter
+- RateLimiter(Auth)
 - Cors
 - AuthService (Login, Logout, Register, ConfirmEmail, ResendEmailConfirmationCode, ForgetPassword, UpdatePassword)
 - FileService (UploadImage, UploadRawFile, DeleteFile)
+- Productervice(AddOroduct, GetAllProducts, GetPRoductById, UpdateProduct)
+- UserService(GetCurrentUser, UpdateCurrentUser, RequestUpdateCurrentEmail, UpdateCurrentEmail, ResendUpdateCurrentEmailConfirmationCode, UpdateCurrentUserName, DeleteCurrentUser)
+- OrderService
+- BaseketService
 
 ## Architechure(Layered On API)
 - **WEB:** UI Components, Hooks, Routes, Call APIs
