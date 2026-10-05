@@ -7,8 +7,6 @@ public class ApplicationDbContext(DbContextOptions options) : IdentityDbContext<
 {
     public DbSet<Product> Products { get; set; }
     public DbSet<Order> Orders  { get; set; }
-    public DbSet<Basket> Baskets { get; set; }
-    public DbSet<BasketItem> BasketItems { get; set; }
     protected override void OnModelCreating(ModelBuilder builder)
     {
         
@@ -33,31 +31,5 @@ public class ApplicationDbContext(DbContextOptions options) : IdentityDbContext<
                   .HasForeignKey(o => o.OrderedUserId)
                   .OnDelete(DeleteBehavior.Restrict);
         });
-        builder.Entity<Basket>(entity =>
-        {
-            entity.HasOne(b => b.User)
-                  .WithMany()                      
-                  .HasForeignKey(b => b.UserId);
-        });
-
-        builder.Entity<BasketItem>(entity =>
-            {
-                entity.HasOne(bi => bi.Basket)
-                    .WithMany(b => b.Items)
-                    .HasForeignKey(bi => bi.BasketId)
-                    .OnDelete(DeleteBehavior.Cascade);
-
-                entity.HasOne(bi => bi.Product)
-                    .WithMany()
-                    .HasForeignKey(bi => bi.ProductId)
-                    .OnDelete(DeleteBehavior.Restrict);
-
-                entity.Property(bi => bi.Quantity)
-                    .IsRequired()
-                    .HasDefaultValue(1);
-
-                entity.HasIndex(bi => new { bi.BasketId, bi.ProductId })
-                    .IsUnique();
-            });
     }
 }

@@ -10,11 +10,4 @@ public class UserRepository : IUserRepository
     {
         _dbContext = dbContext;
     }
-    public async Task<string?> GetUserBasketIdAsync(string userId, CancellationToken ct)
-    {
-        if (userId == null) return "User ID cannot be null.";
-
-        var basketId = await _dbContext.Users.Where(u => u.Id == userId).Select(u => u.BasketId).FirstAsync(ct);
-        return basketId;
-    }
 }

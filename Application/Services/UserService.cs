@@ -47,7 +47,6 @@ public class UserService : IUserService
 
         var user = await _userManager.FindByIdAsync(userId);
 
-        var basketId = await _userRepository.GetUserBasketIdAsync(userId, ct);
 
         if (user == null)
             return Result<UserDto>.Failure("User not found!. It may have been removed or deactivated.", 404);
@@ -59,7 +58,6 @@ public class UserService : IUserService
             LastName = user.LastName!,
             Email = user.Email!,
             IsEmailConfirmed = user.EmailConfirmed,
-            BasketId = basketId,
             Role = role,
         };
         return Result<UserDto>.Success(dto);
