@@ -2,4 +2,5 @@
 
 public interface IProductRepository : IRepository<Product>
 {
+    Task<bool> IsProductExistsByIdAsync(string productId, CancellationToken ct);
 }

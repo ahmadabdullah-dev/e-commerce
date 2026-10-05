@@ -5,4 +5,5 @@ public interface IProductService
     Task<Result<PagedList<ProductDto>>> GetAllProductsAsync(PaginationParams p, CancellationToken ct);
     Task<Result<ProductDto>> GetProductByIdAsync(string id, CancellationToken ct);
     Task<Result<string>> UpdateProductAsync(UpdateProductDto dto, CancellationToken ct);
+    Task<bool> IsProductExistsByIdAsync(string productId, CancellationToken ct); 
 }

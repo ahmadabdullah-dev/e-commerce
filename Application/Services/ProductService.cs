@@ -154,4 +154,8 @@ public class ProductService : IProductService
         }
         return Result<string>.Success("Product updated successfully");
     }
+    public async Task<bool> IsProductExistsByIdAsync(string productId, CancellationToken ct)
+    {
+        return await _productRepository.IsProductExistsByIdAsync(productId, ct);
+    }
 }
