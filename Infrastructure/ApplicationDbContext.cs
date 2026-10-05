@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using System.Reflection.Emit;
 
 namespace Infrastructure;
 
@@ -7,6 +8,7 @@ public class ApplicationDbContext(DbContextOptions options) : IdentityDbContext<
 {
     public DbSet<Product> Products { get; set; }
     public DbSet<Order> Orders  { get; set; }
+    public DbSet<ProductOrderItem> ProductOrderItems { get; set; }
     protected override void OnModelCreating(ModelBuilder builder)
     {
         
@@ -31,5 +33,10 @@ public class ApplicationDbContext(DbContextOptions options) : IdentityDbContext<
                   .HasForeignKey(o => o.OrderedUserId)
                   .OnDelete(DeleteBehavior.Restrict);
         });
+        builder.Entity<ProductOrderItem>(entity =>
+        {
+            entity.Property(p => p.UnitPrice).HasPrecision(18, 2);
+        });
+       
     }
 }
