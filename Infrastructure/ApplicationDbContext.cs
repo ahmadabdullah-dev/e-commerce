@@ -28,11 +28,6 @@ public class ApplicationDbContext(DbContextOptions options) : IdentityDbContext<
         });
         builder.Entity<Order>(entity =>
         {
-            entity.HasOne(o => o.Basket)
-                  .WithMany(b => b.Orders)
-                  .HasForeignKey(o => o.BasketId)
-                  .OnDelete(DeleteBehavior.Restrict);
-
             entity.HasOne(o => o.OrderedUser)
                   .WithMany()                       
                   .HasForeignKey(o => o.OrderedUserId)

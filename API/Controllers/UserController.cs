@@ -12,9 +12,9 @@ public class UserController : BaseApiController
         _userService = userService;
     }
     [HttpGet("current")]
-    public async Task<IActionResult> GetCurrentUser()
+    public async Task<IActionResult> GetCurrentUser(CancellationToken ct)
     {
-        var result = await _userService.GetCurrentUserAsync();
+        var result = await _userService.GetCurrentUserAsync(ct);
         return HandleResult(result);
     }
     [HttpPut("current")]
