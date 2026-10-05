@@ -7,6 +7,7 @@ public class UserDto
     public string LastName { get; set; } = null!;
     public string Email { get; set; } = null!;
     public bool IsEmailConfirmed { get; set; } 
+    public string? BasketId { get; set; } 
     public string Role { get; set; } = null!;
 }
 public class UpdateUserDto

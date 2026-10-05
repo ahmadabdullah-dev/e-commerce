@@ -10,14 +10,15 @@ public class UserService : IUserService
     private readonly IHttpContextAccessor _httpContextAccessor;
     private readonly IEmailService _emailService;
     private readonly ILogger<UserService> _logger;
-
+    private readonly IUserRepository _userRepository;
     private readonly SignInManager<AppUser> _signInManager;
     public UserService(
         UserManager<AppUser> userManager,
         IHttpContextAccessor httpContextAccessor,
         IEmailService emailService,
         ILogger<UserService> logger,
-        SignInManager<AppUser> signInManager
+        SignInManager<AppUser> signInManager,
+        IUserRepository userRepository
 
     )
     {
@@ -25,7 +26,8 @@ public class UserService : IUserService
         _httpContextAccessor = httpContextAccessor;
         _emailService = emailService;
         _logger = logger;
-        _signInManager = signInManager; 
+        _signInManager = signInManager;
+        _userRepository = userRepository;
     }
     public string? GetCurrentUserId()
     {
@@ -35,7 +37,7 @@ public class UserService : IUserService
     {
         return _httpContextAccessor.HttpContext?.User.FindFirstValue(ClaimTypes.Role);
     }
-    public async Task<Result<UserDto>> GetCurrentUserAsync()
+    public async Task<Result<UserDto>> GetCurrentUserAsync(CancellationToken ct)
     {
         var userId = GetCurrentUserId();
         var role = GetCurrentUserRole();
@@ -44,6 +46,8 @@ public class UserService : IUserService
             return Result<UserDto>.Failure("You must be logged in to perform this action.", 403);
 
         var user = await _userManager.FindByIdAsync(userId);
+
+        var basketId = await _userRepository.GetUserBasketIdAsync(userId, ct);
 
         if (user == null)
             return Result<UserDto>.Failure("User not found!. It may have been removed or deactivated.", 404);
@@ -55,6 +59,7 @@ public class UserService : IUserService
             LastName = user.LastName!,
             Email = user.Email!,
             IsEmailConfirmed = user.EmailConfirmed,
+            BasketId = basketId,
             Role = role,
         };
         return Result<UserDto>.Success(dto);
