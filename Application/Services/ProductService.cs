@@ -158,4 +158,8 @@ public class ProductService : IProductService
     {
         return await _productRepository.IsProductExistsByIdAsync(productId, ct);
     }
+    public async Task<Dictionary<string, decimal>> GetPricesByIdsAsync(List<string> ids, CancellationToken ct)
+    {
+       return await _productRepository.GetPricesByIdsAsync(ids, ct);
+    }
 }
