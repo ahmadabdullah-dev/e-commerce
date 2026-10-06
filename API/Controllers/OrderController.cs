@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers;
     
-
 [Authorize]
 public class OrderController : BaseApiController
 {
@@ -16,6 +15,12 @@ public class OrderController : BaseApiController
     public async Task<IActionResult> CreateOrder(CreateOrderDto dto, CancellationToken ct)
     {
         var result = await _orderService.CreateOrderAsync(dto, ct);
+        return HandleResult(result);
+    }
+    [HttpGet("all")]
+    public async Task<IActionResult> GetAllOrders([FromQuery] PaginationParams p, CancellationToken ct)
+    {
+        var result = await _orderService.GetAllOrdersAsync(p, ct);
         return HandleResult(result);
     }
 }

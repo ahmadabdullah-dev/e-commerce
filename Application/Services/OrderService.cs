@@ -45,4 +45,27 @@ public class OrderService : IOrderService
 
         return Result<string>.Success(order.Id);
     }
+    public async Task<Result<PagedList<OrderDto>>> GetAllOrdersAsync(PaginationParams p, CancellationToken ct)
+    {
+        var orders = await _orderRepository.GetAllAsync(p,ct);
+
+        var dtos = new PagedList<OrderDto>
+        {
+            Items = orders.Items.Select(x => new OrderDto
+            {
+                Id = x.Id,
+                UserId = x.OrderedUserId,
+                ShippingAddress = x.ShippingAddress,
+                Products = x.Products.Select(po => new ProductOrderItemDto
+                {
+                    ProductId = po.ProductId,
+                    Quantity = po.Quantity,
+                }).ToList(),
+                TotalPrice = x.Products.Sum(po => po.Quantity * po.UnitPrice),
+                CreatedAt = x.CreatedAt
+            }).ToList(),
+        };
+
+        return Result<PagedList<OrderDto>>.Success(dtos);
+    }
 }

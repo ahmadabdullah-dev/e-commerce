@@ -19,3 +19,12 @@ public class CreateOrderDto
     [Required, MinLength(1), MaxLength(200)]
     public required List<ProductOrderItemDto> Products { get; set; }
 }
+public class OrderDto
+{
+    public required string Id { get; set; }
+    public required string UserId { get; set; }
+    public required string ShippingAddress { get; set; }
+    public required List<ProductOrderItemDto> Products { get; set; }
+    public required decimal TotalPrice { get; set; }
+    public required DateTime CreatedAt { get; set; }
+}

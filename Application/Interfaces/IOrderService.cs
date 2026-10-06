@@ -3,4 +3,5 @@
 public interface IOrderService
 {
     Task<Result<string>> CreateOrderAsync(CreateOrderDto dto, CancellationToken ct);
+    Task<Result<PagedList<OrderDto>>> GetAllOrdersAsync(PaginationParams p, CancellationToken ct);
 }
