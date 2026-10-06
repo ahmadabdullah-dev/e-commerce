@@ -23,4 +23,10 @@ public class OrderController : BaseApiController
         var result = await _orderService.GetAllOrdersAsync(p, ct);
         return HandleResult(result);
     }
+    [HttpGet("current")]
+    public async Task<IActionResult> GetCurrentUserOrders([FromQuery] PaginationParams p, CancellationToken ct)
+    {
+        var result = await _orderService.GetCurrentUserOrdersAsync(p, ct);
+        return HandleResult(result);
+    }
 }

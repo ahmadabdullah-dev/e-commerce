@@ -12,4 +12,10 @@ public class OrderRepository : Repository<Order>, IOrderRepository
 
         return await PagedList<Order>.CreateAsync(query, p.Page, p.PageSize, ct);
     }
+    public async Task<PagedList<Order>> GetUserOrdersByUserIdAsync(string userId, PaginationParams p, CancellationToken ct)
+    {
+        var query = DbSet.AsNoTracking().Where(o => o.OrderedUserId == userId).Include(o => o.Products);
+
+        return await PagedList<Order>.CreateAsync(query, p.Page, p.PageSize, ct);
+    }
 }
