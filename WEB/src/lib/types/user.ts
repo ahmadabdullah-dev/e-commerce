@@ -13,3 +13,8 @@ export type RequestUpdateCurrentEmailDto = {
 export type UpdateCurrentEmailDto = {
   code: string;
 }
+
+export type UpdateUserDto = {
+    firstName: string | null,
+    lastName: string | null
+}

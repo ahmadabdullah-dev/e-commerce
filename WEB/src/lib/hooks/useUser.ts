@@ -1,5 +1,5 @@
-import type { RequestUpdateCurrentEmailDto, UpdateCurrentEmailDto, UserDto } from "../types/user";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import type { RequestUpdateCurrentEmailDto, UpdateCurrentEmailDto, UpdateUserDto, UserDto } from "../types/user";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import agent from "../api/agent";
 export const useCurrentUser = () =>
   useQuery<UserDto>({
@@ -19,10 +19,17 @@ export const useRequestUpdateCurrentEmail = () => {
 };
 
 export const useUpdateCurrentEmail = () => {
+  const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async (dto: UpdateCurrentEmailDto) => {
-      const response = await agent.patch<string>("/User/update-current-email", dto);
+      const response = await agent.patch<string>(
+        "/User/update-current-email",
+        dto,
+      );
       return response.data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["currentUser"] });
     },
   });
 };
@@ -32,6 +39,19 @@ export const useResendCurrentEmailConfirmationCode = () => {
     mutationFn: async () => {
       const response = await agent.post<string>("/User/resend-update-current-email-confirmation-code");
       return response.data;
+    },
+  });
+};
+
+export const useUpdateCurrentUser = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async (dto: UpdateUserDto) => {
+      const response = await agent.put<string>("/User/current", dto);
+      return response.data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["currentUser"] });
     },
   });
 };
