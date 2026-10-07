@@ -7,7 +7,7 @@ export type UserDto = {
     role: string
 }
 export type RequestUpdateCurrentEmailDto = {
-  email: string;
+  newEmail: string;
 }
 
 export type UpdateCurrentEmailDto = {
