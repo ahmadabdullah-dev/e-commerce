@@ -1,5 +1,6 @@
 export type UserDto = {
     id: string,
+    userName: string,
     firstName: string,
     lastName: string,
     email: string,
@@ -17,4 +18,7 @@ export type UpdateCurrentEmailDto = {
 export type UpdateUserDto = {
     firstName: string | null,
     lastName: string | null
+}
+export type UpdateCurrentUserNameDto = {
+  newUserName: string;
 }
