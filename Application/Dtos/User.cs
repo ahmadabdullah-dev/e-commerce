@@ -16,3 +16,4 @@ public class UpdateUserDto
 }
 public record RequestUpdateCurrentEmailDto(string NewEmail);
 public record UpdateCurrentEmailDto(string Code);
+public record UpdateCurrentUserNameDto(string NewUserName);

@@ -43,10 +43,10 @@ public class UserController : BaseApiController
         var result = await _userService.ResendUpdateCurrentEmailConfirmationCodeAsync();
         return HandleResult(result);
     }
-    [HttpPatch("update-current-username/{newUserName}")]
-    public async Task<IActionResult> UpdateCurrentUserName(string newUserName)
+    [HttpPatch("update-current-username")]
+    public async Task<IActionResult> UpdateCurrentUserName(UpdateCurrentUserNameDto dto)
     {
-        var result = await _userService.UpdateCurrentUserNameAsync(newUserName);
+        var result = await _userService.UpdateCurrentUserNameAsync(dto);
         return HandleResult(result);
     }
     [HttpDelete("delete-current-user")]

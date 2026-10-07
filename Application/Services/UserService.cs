@@ -196,7 +196,7 @@ public class UserService : IUserService
 
         return Result<string>.Success("Confirmation code resent to new email");
     }
-    public async Task<Result<string>> UpdateCurrentUserNameAsync(string newUserName)
+    public async Task<Result<string>> UpdateCurrentUserNameAsync(UpdateCurrentUserNameDto dto)
     {
         var currentUserId = GetCurrentUserId();
 
@@ -208,10 +208,10 @@ public class UserService : IUserService
         if (currentUser == null)
             return Result<string>.Failure("User not found", 404);
 
-        if (string.Equals(currentUser.UserName, newUserName, StringComparison.OrdinalIgnoreCase))
+        if (string.Equals(currentUser.UserName, dto.NewUserName, StringComparison.OrdinalIgnoreCase))
             return Result<string>.Failure("You cannot use the same UserName", 409);
 
-        currentUser.UserName = newUserName;
+        currentUser.UserName = dto.NewUserName;
 
         var updateResult = await _userManager.UpdateAsync(currentUser);
 
