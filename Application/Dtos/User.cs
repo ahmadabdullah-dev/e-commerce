@@ -14,3 +14,5 @@ public class UpdateUserDto
     public string? FirstName { get; set; } 
     public string? LastName { get; set; } 
 }
+public record RequestUpdateCurrentEmailDto(string NewEmail);
+public record UpdateCurrentEmailDto(string Code);

@@ -89,7 +89,7 @@ public class UserService : IUserService
         }
         return Result<string>.Success("User updated successfully.");
     }
-    public async Task<Result<string>> RequestUpdateCurrentEmailAsync(string newEmail)
+    public async Task<Result<string>> RequestUpdateCurrentEmailAsync(RequestUpdateCurrentEmailDto dto)
     {
         var currentUserId = GetCurrentUserId();
 
@@ -101,15 +101,15 @@ public class UserService : IUserService
         if (currentUser == null)
             return Result<string>.Failure("Current user not found in db", 404);
 
-        if (string.Equals(currentUser.Email, newEmail, StringComparison.OrdinalIgnoreCase))
+        if (string.Equals(currentUser.Email, dto.NewEmail, StringComparison.OrdinalIgnoreCase))
             return Result<string>.Failure("You cannot change with the same email", 409);
 
-        var existingUser = await _userManager.FindByEmailAsync(newEmail);
+        var existingUser = await _userManager.FindByEmailAsync(dto.NewEmail);
 
         if (existingUser != null)
-            return Result<string>.Failure($"Email {newEmail} already taken", 400);
+            return Result<string>.Failure($"Email {dto.NewEmail} already taken", 400);
 
-        currentUser.PendingEmail = newEmail;
+        currentUser.PendingEmail = dto.NewEmail;
 
         var updateResult = await _userManager.UpdateAsync(currentUser);
        
@@ -118,7 +118,7 @@ public class UserService : IUserService
       
         try
         {
-            await _emailService.SendCodeAsync(currentUser, "Email Update", EmailPurposes.EMAIL_UPDATE, newEmail);
+            await _emailService.SendCodeAsync(currentUser, "Email Update", EmailPurposes.EMAIL_UPDATE, dto.NewEmail);
 
         }
         catch (Exception ex)
@@ -133,7 +133,7 @@ public class UserService : IUserService
         }
         return Result<string>.Success("Confirmation code sent to new email");
     }
-    public async Task<Result<string>> UpdateCurrentEmailAsync(string code)
+    public async Task<Result<string>> UpdateCurrentEmailAsync(UpdateCurrentEmailDto dto)
     {
         var currentUserId = GetCurrentUserId();
        
@@ -149,7 +149,7 @@ public class UserService : IUserService
             return Result<string>.Failure("No pending email was found", 404);
 
 
-        var isValid = await _userManager.VerifyUserTokenAsync(currentUser, TokenOptions.DefaultEmailProvider, EmailPurposes.EMAIL_UPDATE, code);
+        var isValid = await _userManager.VerifyUserTokenAsync(currentUser, TokenOptions.DefaultEmailProvider, EmailPurposes.EMAIL_UPDATE, dto.Code);
 
         if (!isValid)
             return Result<string>.Failure("Invalid or expired code.", 400);
