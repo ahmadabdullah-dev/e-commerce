@@ -27,17 +27,32 @@ import { useGetProductsByIds } from "../../lib/hooks/useProduct";
 
 export default function CurrentBasket() {
   const navigate = useNavigate();
-  const { basket, totalItems, setQuantity, removeFromBasket, clearBasket } =
-    useBasket();
+  const {
+    basket,
+    totalItems,
+    isUserLoading,
+    setQuantity,
+    removeFromBasket,
+    clearBasket,
+  } = useBasket();
   const [confirmClearOpen, setConfirmClearOpen] = useState(false);
 
   const results = useGetProductsByIds(basket.map((x) => x.id));
-  const isLoading = results.some((r) => r.isLoading);
+  const isLoading = isUserLoading || results.some((r) => r.isLoading);
 
   const subtotal = basket.reduce((sum, item, i) => {
     const product = results[i]?.data;
     return sum + (product ? Number(product.price ?? 0) * item.quantity : 0);
   }, 0);
+
+  // Loading
+  if (isLoading) {
+    return (
+      <Box sx={{ display: "flex", justifyContent: "center", mt: 8 }}>
+        <CircularProgress />
+      </Box>
+    );
+  }
 
   // Empty state
   if (basket.length === 0) {
@@ -56,14 +71,6 @@ export default function CurrentBasket() {
           Browse products
         </Button>
       </Container>
-    );
-  }
-
-  if (isLoading) {
-    return (
-      <Box sx={{ display: "flex", justifyContent: "center", mt: 8 }}>
-        <CircularProgress />
-      </Box>
     );
   }
 

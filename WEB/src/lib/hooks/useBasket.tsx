@@ -1,32 +1,38 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCurrentUser } from "./useUser";
 
 export type BasketItem = {
   id: string;
   quantity: number;
 };
 
-const BASKET_KEY = "basket";
 const BASKET_EVENT = "basket-changed";
 
-function readBasket(): BasketItem[] {
+const getStorageKey = (userId?: string) => `basket:${userId ?? "guest"}`;
+
+function readBasket(key: string): BasketItem[] {
   try {
-    const raw = localStorage.getItem(BASKET_KEY);
+    const raw = localStorage.getItem(key);
     return raw ? (JSON.parse(raw) as BasketItem[]) : [];
   } catch {
     return [];
   }
 }
 
-function writeBasket(items: BasketItem[]) {
-  localStorage.setItem(BASKET_KEY, JSON.stringify(items));
+function writeBasket(key: string, items: BasketItem[]) {
+  localStorage.setItem(key, JSON.stringify(items));
   window.dispatchEvent(new Event(BASKET_EVENT));
 }
 
 export function useBasket() {
-  const [basket, setBasket] = useState<BasketItem[]>(readBasket);
+  const { data: currentUser, isLoading: isUserLoading } = useCurrentUser();
+  const storageKey = getStorageKey(currentUser?.id);
+
+  // bump this to force a re-read from localStorage
+  const [version, setVersion] = useState(0);
 
   useEffect(() => {
-    const sync = () => setBasket(readBasket());
+    const sync = () => setVersion((v) => v + 1);
     window.addEventListener(BASKET_EVENT, sync); // same tab
     window.addEventListener("storage", sync); // other tabs
     return () => {
@@ -35,45 +41,73 @@ export function useBasket() {
     };
   }, []);
 
-  const addToBasket = useCallback((id: string, quantity = 1) => {
-    const current = readBasket();
-    const existing = current.find((x) => x.id === id);
-    if (existing) {
+  // re-reads whenever the user changes (login/logout) or the basket changes
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const basket = useMemo(() => readBasket(storageKey), [storageKey, version]);
+
+  const addToBasket = useCallback(
+    (id: string, quantity = 1) => {
+      const current = readBasket(storageKey);
+      const existing = current.find((x) => x.id === id);
+      if (existing) {
+        writeBasket(
+          storageKey,
+          current.map((x) =>
+            x.id === id ? { ...x, quantity: x.quantity + quantity } : x,
+          ),
+        );
+      } else {
+        writeBasket(storageKey, [...current, { id, quantity }]);
+      }
+    },
+    [storageKey],
+  );
+
+  const setQuantity = useCallback(
+    (id: string, quantity: number) => {
+      const current = readBasket(storageKey);
+      if (quantity <= 0) {
+        writeBasket(
+          storageKey,
+          current.filter((x) => x.id !== id),
+        );
+        return;
+      }
       writeBasket(
-        current.map((x) =>
-          x.id === id ? { ...x, quantity: x.quantity + quantity } : x,
-        ),
+        storageKey,
+        current.map((x) => (x.id === id ? { ...x, quantity } : x)),
       );
-    } else {
-      writeBasket([...current, { id, quantity }]);
-    }
-  }, []);
+    },
+    [storageKey],
+  );
 
-  const setQuantity = useCallback((id: string, quantity: number) => {
-    const current = readBasket();
-    if (quantity <= 0) {
-      writeBasket(current.filter((x) => x.id !== id));
-      return;
-    }
-    writeBasket(current.map((x) => (x.id === id ? { ...x, quantity } : x)));
-  }, []);
-
-  const removeFromBasket = useCallback((id: string) => {
-    writeBasket(readBasket().filter((x) => x.id !== id));
-  }, []);
+  const removeFromBasket = useCallback(
+    (id: string) => {
+      writeBasket(
+        storageKey,
+        readBasket(storageKey).filter((x) => x.id !== id),
+      );
+    },
+    [storageKey],
+  );
 
   const getQuantity = useCallback(
     (id: string) => basket.find((x) => x.id === id)?.quantity ?? 0,
     [basket],
   );
 
-  const clearBasket = useCallback(() => writeBasket([]), []);
+  const clearBasket = useCallback(
+    () => writeBasket(storageKey, []),
+    [storageKey],
+  );
 
   const totalItems = basket.reduce((sum, x) => sum + x.quantity, 0);
 
   return {
     basket,
     totalItems,
+    userId: currentUser?.id,
+    isUserLoading,
     addToBasket,
     setQuantity,
     removeFromBasket,
