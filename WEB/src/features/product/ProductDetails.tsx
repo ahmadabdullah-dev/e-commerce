@@ -12,12 +12,18 @@ import {
 } from "@mui/material";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { useCurrentUser } from "../../lib/hooks/useUser";
+import { useBasket } from "../../lib/hooks/useBasket";
+import AddIcon from "@mui/icons-material/Add";
+import RemoveIcon from "@mui/icons-material/Remove";
+import { IconButton } from "@mui/material"; 
+import DeleteOutlineIcon from "@mui/icons-material/DeleteOutlined";
 
 export default function ProductDetails() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const { data: product, isLoading, error } = useGetProductById(id ?? "");
   const {data: currentUser} = useCurrentUser();
+  const { addToBasket, setQuantity, removeFromBasket, getQuantity } = useBasket();
 
   if (!id) {
     return (
@@ -127,10 +133,63 @@ export default function ProductDetails() {
                 No description available.
               </Typography>
             )}
+            {(() => {
+              const quantity = getQuantity(product.id);
 
-            <Button variant="contained" size="large" sx={{ mt: 2 }}>
-              Add to cart
-            </Button>
+              if (quantity === 0) {
+                return (
+                  <Button
+                    variant="contained"
+                    size="large"
+                    sx={{ mt: 2 }}
+                    onClick={() => addToBasket(product.id, 1)}
+                  >
+                    Add to basket
+                  </Button>
+                );
+              }
+
+              return (
+                <Box
+                  sx={{ mt: 2, display: "flex", alignItems: "center", gap: 2 }}
+                >
+                  <Box
+                    sx={{
+                      display: "flex",
+                      alignItems: "center",
+                      border: "1px solid",
+                      borderColor: "divider",
+                    }}
+                  >
+                    <IconButton
+                      onClick={() => setQuantity(product.id, quantity - 1)}
+                      aria-label="Decrease quantity"
+                    >
+                      <RemoveIcon />
+                    </IconButton>
+
+                    <Typography sx={{ minWidth: 40, textAlign: "center" }}>
+                      {quantity}
+                    </Typography>
+
+                    <IconButton
+                      onClick={() => setQuantity(product.id, quantity + 1)}
+                      aria-label="Increase quantity"
+                    >
+                      <AddIcon />
+                    </IconButton>
+                  </Box>
+
+                  <IconButton
+                    color="error"
+                    onClick={() => removeFromBasket(product.id)}
+                    aria-label="Remove from basket"
+                  >
+                    <DeleteOutlineIcon />
+                  </IconButton>
+                </Box>
+              );
+            })()}
           </Box>
         </Grid>
       </Grid>
