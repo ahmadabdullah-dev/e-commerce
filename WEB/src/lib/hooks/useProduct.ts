@@ -1,4 +1,4 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient, useQueries } from "@tanstack/react-query";
 import agent from "../api/agent";
 import type {
   AddProductDto,
@@ -58,3 +58,14 @@ export const useUpdateProduct = () => {
     },
   });
 };
+
+export function useGetProductsByIds(ids: string[]) {
+  return useQueries({
+    queries: ids.map((id) => ({
+      queryKey: ["products", id],
+      queryFn: async () => agent.get<ProductDto>(`/Product/${encodeURIComponent(id)}`).then((res) => res.data),
+      staleTime: 5 * 60 * 1000,
+      retry: false,
+    })),
+  });
+}

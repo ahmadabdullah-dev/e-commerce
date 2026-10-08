@@ -18,6 +18,7 @@ import RequireAdminRole from "./RequireAdminRole";
 import AddProductForm from "../../features/product/AddProductForm";
 import Settings from "../../features/user/Settings";
 import UpdateEmail from "../../features/user/Email/UpdateEmail";
+import CurrentBasket from "../../features/Basket/CurrentBasket";
 
 export const routes = createBrowserRouter([
   {
@@ -39,10 +40,11 @@ export const routes = createBrowserRouter([
                   { path: "product/add", element: <AddProductForm /> },
                 ],
               },
-              { path: "settings", element: <Settings/>},
-              { path: "update-email", element: <UpdateEmail/>},
+              { path: "settings", element: <Settings /> },
+              { path: "update-email", element: <UpdateEmail /> },
               { path: "dashboard", element: <Dashboard /> },
               { path: "my-profile", element: <MyProfile /> },
+              { path: "basket", element: <CurrentBasket /> },
             ],
           },
           { path: "/confirm-email", element: <ConfirmEmailForm /> },

@@ -13,6 +13,7 @@ import AppLogoWithName from "./AppLogoWithName";
 const NAV_LINKS = [
   { label: "Dashboard", href: "/dashboard" },
   { label: "My Profile", href: "/my-profile" },
+  { label: "Basket", href:"/basket"}
 ];
 
 export default function Header() {
